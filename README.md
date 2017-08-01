@@ -1,3 +1,3 @@
-# Racket and Postgrel
+# Racket and Postgresql
 
-Aplicação em Racket e banco de dados Postgresql.
+Aplicação com Racket e Postgresql.
