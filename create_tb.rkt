@@ -1,12 +1,12 @@
-#lang racket
+#lang at-exp racket
 
 (require db)
 
 (define (cnn) (postgresql-connect #:user "postgres"
-                                  #:password "ama"
+                                  #:password "12345"
                                   #:port 5432
                                   #:server "localhost"
-                                  #:database "trab_db"))
+                                  #:database "trab"))
 
 (define tb-cond
   "CREATE TABLE trab_db.tb_condominio
@@ -17,8 +17,6 @@
     bairro  character varying(30),
     rua character varying(40) COLLATE pg_catalog.\"default\",
     num integer,
-    tempo timestamp,
-    gasto numeric,
     CONSTRAINT tb_condominio_pkey PRIMARY KEY (cod_condominio)
  )"
 )
@@ -28,8 +26,6 @@
   (
     cod_predio serial NOT NULL,
     num integer,
-    gasto numeric,
-    tempo timestamp,
     CONSTRAINT tb_predio_pkey PRIMARY KEY (cod_predio)
   )"
 )
@@ -40,8 +36,6 @@
     cod_apartamento serial NOT NULL,
     nome_proprietario character varying COLLATE pg_catalog.\"default\",
     telefone integer,
-    tempo timestamp,
-    gasto numeric,
     CONSTRAINT tb_apartamento_pkey PRIMARY KEY (cod_apartamento)
 )")
 
@@ -50,8 +44,6 @@
   (
     cod_comodo serial NOT NULL,
     nome_comodo character varying COLLATE pg_catalog.\"default\",
-    tempo timestamp,
-    gasto numeric,
     CONSTRAINT tb_comodo_pkey PRIMARY KEY (cod_comodo)
 )")
 
@@ -60,7 +52,7 @@
     (
         cod_tomada serial NOT NULL,
         tempo timestamp,
-        gastotomada numeric,
+        gasto numeric,
         CONSTRAINT tb_tomada_pkey PRIMARY KEY (cod_tomada)
     )")
 
@@ -141,11 +133,32 @@
   (disconnect (cnn)))
 |#
 
-(define (creat-tb)
+(define (create-tb)
   (let loop ([i list-tb])
     (if (empty? i)
         (printf "Tabelas Criadas.\n")
         (and (query-exec (cnn) (car i)) (loop (cdr i)))
         ))
   (disconnect (cnn)))
-        
+
+(define nome-tabelas (list "trab_db.tb_condominio"
+                           "trab_db.tb_predio"
+                           "trab_db.tb_apartamento"
+                           "trab_db.tb_comodo"
+                           "trab_db.loc_tomada_comodo"
+                           "trab_db.tb_tomada"
+                           "trab_db.loc_comodo_apartamento"
+                           "trab_db.loc_apartamento_predio"
+                           "trab_db.loc_predio_condominio"))
+
+(define (delete-tb)
+  (let loop ([i nome-tabelas])
+    (if (empty? i)
+        (printf "Tabelas Deletadas.\n")
+        (and (query-exec (cnn) @~a{DROP TABLE ?} (car i))
+             (loop (cdr i)))
+        ))
+  (disconnect (cnn)))
+
+
+                          
