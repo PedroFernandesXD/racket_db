@@ -1,0 +1,103 @@
+CREATE TABLE trab_db.tb_condominio
+(
+    cod_condominio serial NOT NULL,
+    rua character varying(40) COLLATE pg_catalog."default",
+    numero integer,
+    tempo timestamp without time zone,
+    CONSTRAINT tb_condominio_pkey PRIMARY KEY (cod_condominio)
+)
+
+CREATE TABLE trab_db.tb_predio
+(
+    cod_predio integer NOT NULL,
+    num_apartamento integer,
+    gasto_mensal integer,
+    tempo timestamp,
+    CONSTRAINT tb_predio_pkey PRIMARY KEY (cod_predio)
+)
+
+CREATE TABLE trab_db.tb_apartamento
+(
+    cod_apartamento serial NOT NULL,
+    nome_proprietario character varying COLLATE pg_catalog."default",
+    telefone integer,
+    tempo timestamp,
+    gasto integer,
+    CONSTRAINT tb_apartamento_pkey PRIMARY KEY (cod_apartamento)
+)
+CREATE TABLE trab_db.tb_comodo
+(
+    cod_comodo integer NOT NULL,
+    nome_comodo character varying COLLATE pg_catalog."default",
+    tempo timestamp,
+    gasto integer,
+    CONSTRAINT tb_comodo_pkey PRIMARY KEY (cod_comodo)
+)
+    CREATE TABLE trab_db.tb_tomada
+    (
+        cod_tomada integer NOT NULL,
+        valorsensor integer,
+        tempo timestamp,
+        gastotomada integer,
+        CONSTRAINT tb_tomada_pkey PRIMARY KEY (cod_tomada)
+    )
+CREATE TABLE trab_db.loc_tomada_comodo
+(
+    cod_tomada integer NOT NULL,
+    cod_comodo integer,
+    CONSTRAINT loc_tomada_comodo_pkey PRIMARY KEY (cod_tomada),
+    CONSTRAINT cod_comodo FOREIGN KEY (cod_comodo)
+        REFERENCES trab_db.tb_comodo (cod_comodo) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT cod_tomada FOREIGN KEY (cod_tomada)
+        REFERENCES trab_db.tb_tomada (cod_tomada) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+
+CREATE TABLE trab_db.loc_comodo_apartamento
+(
+    cod_comodo integer NOT NULL,
+    cod_apartamento integer,
+    CONSTRAINT loc_comodo_apartamento_pkey PRIMARY KEY (cod_comodo),
+    CONSTRAINT cod_apartamento FOREIGN KEY (cod_apartamento)
+        REFERENCES trab_db.tb_apartamento ("cod_Apartamento") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT cod_comodo FOREIGN KEY (cod_comodo)
+        REFERENCES trab_db.tb_comodo (cod_comodo) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+CREATE TABLE trab_db.loc_apartamento_predio
+(
+    cod_apartamento integer NOT NULL,
+    cod_predio integer,
+    CONSTRAINT loc_apartamento_predio_pkey PRIMARY KEY (cod_apartamento),
+    CONSTRAINT cod_apartamento FOREIGN KEY (cod_apartamento)
+        REFERENCES trab_db.tb_apartamento (cod_apartamento) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT cod_predio FOREIGN KEY (cod_predio)
+        REFERENCES trab_db.tb_predio (cod_predio) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+CREATE TABLE trab_db.loc_predio_condominio
+(
+    cod_predio integer NOT NULL,
+    cod_condominio integer,
+    CONSTRAINT loc_predio_condominio_pkey PRIMARY KEY (cod_predio),
+    CONSTRAINT cod_condominio FOREIGN KEY (cod_condominio)
+        REFERENCES trab_db.tb_condominio (cod_condominio) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT cod_predio FOREIGN KEY (cod_predio)
+        REFERENCES trab_db.tb_predio (cod_predio) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
