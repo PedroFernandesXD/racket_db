@@ -1,3 +1,3 @@
 # Racket and Postgresql
 
-Aplicação com Racket e Postgresql.
+Aplicação com Racket e Postgresql. Code sujo e inefiente.
